@@ -1,0 +1,24 @@
+{
+  "name": "body-parser",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sehgalv/Buying-Potatoes-API.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sehgalv/Buying-Potatoes-API/issues"
+  },
+  "homepage": "https://github.com/sehgalv/Buying-Potatoes-API#readme",
+  "description": "",
+  "dependencies": {
+    "body-parser": "^1.12.3",
+    "express": "^4.16.2",
+    "oracledb": "^1.13.1"
+  }
+}
