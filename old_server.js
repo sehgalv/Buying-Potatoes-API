@@ -1,6 +1,10 @@
-"use strict";
+
+var express = require('express');
+const app = express();
 var oracledb = require('oracledb');
-const config = require(`../../../config/dbconfig.js`);
+const config = require(`./src/config/dbconfig.js`);
+var bodyParser = require('body-parser');
+app.use(bodyParser.json());
 
 var connAttrs = {
     "user": config.user,
@@ -8,7 +12,8 @@ var connAttrs = {
     "connectString": config.connectString
 }
 
-module.exports.initRouter = (req, res) => {
+app.get('/addresses', function(req, res) {
+    "use strict";
     oracledb.getConnection(connAttrs, function (err, connection) {
         if (err) {
             // Error connecting to DB
@@ -20,17 +25,15 @@ module.exports.initRouter = (req, res) => {
             }));
             return;
         }
-        
-        const addressID = req.params.addressID * 1;        
 
-        connection.execute("SELECT * FROM BP_ADDRESS where address_id=" +addressID+";", {}, {
+        connection.execute("SELECT * FROM BP_ADDRESS;", {}, {
             outFormat: oracledb.OBJECT // Return the result as Object
         }, function (err, result) {
             if (err) {
                 res.set('Content-Type', 'application/json');
                 res.status(500).send(JSON.stringify({
                     status: 500,
-                    message: "Error getting the address",
+                    message: "Error getting the addresses",
                     detailed_message: err.message
                 }));
             } else {
@@ -43,9 +46,14 @@ module.exports.initRouter = (req, res) => {
                     if (err) {
                         console.error(err.message);
                     } else {
-                        console.log("GET /addresses/"+addressID+" : Connection released");
+                        console.log("GET /addresses : Connection released");
                     }
                 });
         });
     });
-};
+});
+
+
+app.listen(3000, () => {
+    console.log('listening on port 3000');    
+});

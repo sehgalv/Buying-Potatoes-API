@@ -1,6 +1,6 @@
-"use strict"
-;var oracledb = require('oracledb');
-const config = require(`../../config/dbconfig.js`);
+"use strict";
+var oracledb = require('oracledb');
+const config = require(`../../../config/dbconfig.js`);
 
 var connAttrs = {
     "user": config.user,
@@ -20,15 +20,17 @@ module.exports = (req, res) => {
             }));
             return;
         }
+        
+        const itemID = req.params.itemID * 1;        
 
-        connection.execute("SELECT * FROM BP_ADDRESS;", {}, {
+        connection.execute("SELECT * FROM BP_ADDRESS where item_id=" +itemID+";", {}, {
             outFormat: oracledb.OBJECT // Return the result as Object
         }, function (err, result) {
             if (err) {
                 res.set('Content-Type', 'application/json');
                 res.status(500).send(JSON.stringify({
                     status: 500,
-                    message: "Error getting the addresses",
+                    message: "Error getting the item",
                     detailed_message: err.message
                 }));
             } else {
@@ -41,7 +43,7 @@ module.exports = (req, res) => {
                     if (err) {
                         console.error(err.message);
                     } else {
-                        console.log("GET /addresses : Connection released");
+                        console.log("GET /item/"+itemID+" : Connection released");
                     }
                 });
         });

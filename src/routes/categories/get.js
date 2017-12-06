@@ -1,6 +1,6 @@
 "use strict";
 var oracledb = require('oracledb');
-const config = require(`../../../config/dbconfig.js`);
+const config = require(`../../config/dbconfig.js`);
 
 var connAttrs = {
     "user": config.user,
@@ -8,7 +8,7 @@ var connAttrs = {
     "connectString": config.connectString
 }
 
-module.exports.initRouter = (req, res) => {
+module.exports = (req, res) => {
     oracledb.getConnection(connAttrs, function (err, connection) {
         if (err) {
             // Error connecting to DB
@@ -20,17 +20,15 @@ module.exports.initRouter = (req, res) => {
             }));
             return;
         }
-        
-        const addressID = req.params.addressID * 1;        
 
-        connection.execute("SELECT * FROM BP_ADDRESS where address_id=" +addressID+";", {}, {
+        connection.execute("SELECT * FROM BP_CATEGORY;", {}, {
             outFormat: oracledb.OBJECT // Return the result as Object
         }, function (err, result) {
             if (err) {
                 res.set('Content-Type', 'application/json');
                 res.status(500).send(JSON.stringify({
                     status: 500,
-                    message: "Error getting the address",
+                    message: "Error getting the categories",
                     detailed_message: err.message
                 }));
             } else {
@@ -43,7 +41,7 @@ module.exports.initRouter = (req, res) => {
                     if (err) {
                         console.error(err.message);
                     } else {
-                        console.log("GET /addresses/"+addressID+" : Connection released");
+                        console.log("GET /categories : Connection released");
                     }
                 });
         });
