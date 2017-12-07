@@ -19,6 +19,9 @@ exports.initRouter = connection => {
 
     const items = require('./items');
     items.initRouter(connection, router);
+
+    const stores = require('./stores');
+    stores.initRouter(connection, router);
     return router;
 }
 
