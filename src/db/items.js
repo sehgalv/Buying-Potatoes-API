@@ -1,4 +1,5 @@
 const routes = require('../routes');
+var oracledb = require('oracledb');
 
 /**
  * Gets all items from the BP_ITEMS table in the database
@@ -6,7 +7,9 @@ const routes = require('../routes');
  */
 module.exports.getItems = function getItems(connection) {
     return connection.execute(
-        `SELECT * FROM BP_ITEM`, []
+        `SELECT * FROM BP_ITEM`, [], {
+            outFormat: oracledb.OBJECT
+        }
     )
     .then(
         (res) => {
@@ -34,7 +37,9 @@ module.exports.getItem = function getItem(connection, ITEM_ID) {
     return connection.execute(
         `SELECT * 
         FROM BP_ITEM
-        WHERE ITEM_ID=:ITEM_ID`, [ITEM_ID]
+        WHERE ITEM_ID=:ITEM_ID`, [ITEM_ID], {
+            outFormat: oracledb.OBJECT
+        }
     )
     .then(
         (res) => {
@@ -67,8 +72,13 @@ module.exports.getItem = function getItem(connection, ITEM_ID) {
 module.exports.getItemsInStore = function getItemsInStore(connection, STORE_ID) {
     return connection.execute(
         `SELECT * 
-        FROM BP_ITEM_IN_STORE
-        WHERE STORE_ID=:STORE_ID`, [STORE_ID]
+        FROM BP_ITEM_IN_STORE itst LEFT JOIN BP_ITEM it
+        on itst.item_id = it.item_id
+        LEFT JOIN BP_STORE st
+        on itst.store_id = st.store_id
+        WHERE itst.STORE_ID=:STORE_ID`, [STORE_ID], {
+            outFormat: oracledb.OBJECT
+        }
     )
     .then(
         (res) => {
@@ -101,9 +111,14 @@ module.exports.getItemsInStore = function getItemsInStore(connection, STORE_ID) 
 module.exports.getItemInStore = function getItemInStore(connection, ITEM_ID, STORE_ID) {
     return connection.execute(
         `SELECT * 
-        FROM BP_ITEM_IN_STORE
-        WHERE STORE_ID=:STORE_ID
-        AND ITEM_ID=:ITEM_ID`, [ITEM_ID, STORE_ID]
+        FROM BP_ITEM_IN_STORE itst LEFT JOIN BP_ITEM it
+        on itst.item_id = it.item_id
+        LEFT JOIN BP_STORE st
+        on itst.store_id = st.store_id
+        WHERE itst.STORE_ID=:STORE_ID
+        AND itst.ITEM_ID=:ITEM_ID`, [ITEM_ID, STORE_ID], {
+            outFormat: oracledb.OBJECT
+        }
     )
     .then(
         (res) => {

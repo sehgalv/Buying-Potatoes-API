@@ -1,4 +1,5 @@
 const routes = require('../routes');
+var oracledb = require('oracledb');
 
 /**
  * Gets all lists from the BP_USERS table in the database
@@ -6,7 +7,11 @@ const routes = require('../routes');
  */
 module.exports.getLists = function getLists(connection) {
     return connection.execute(
-        `SELECT * FROM BP_SHOPPING_LIST`, []
+        `SELECT * 
+        FROM BP_SHOPPING_LIST sl left join BP_ITEM it
+        on sl.item_Id = it.item_id`, [], {
+            outFormat: oracledb.OBJECT
+        }
     )
     .then(
         (res) => {
@@ -33,8 +38,11 @@ module.exports.getLists = function getLists(connection) {
 module.exports.getList = function getList(connection, LIST_ID) {
     return connection.execute(
         `SELECT * 
-        FROM BP_SHOPPING_LIST
-        WHERE LIST_ID=:LIST_ID`, [LIST_ID]
+        FROM BP_SHOPPING_LIST sl left join BP_ITEM it
+        on sl.item_Id = it.item_id
+        WHERE sl.LIST_ID=:LIST_ID`, [LIST_ID], {
+            outFormat: oracledb.OBJECT
+        }
     )
     .then(
         (res) => {

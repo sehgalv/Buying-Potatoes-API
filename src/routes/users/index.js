@@ -30,4 +30,12 @@ exports.initRouter =  (connection,router) => {
             (err) => error(err, res)
         );
     });
+
+    router.get('/users/:user_id/address', (req,res) => {
+        db.getUserAddress(connection, req.params.user_id)
+        .then(
+            (res2) => res.status(res2.status).json(res2.data),
+            (err) => error(err, res)
+        );
+    });
 }

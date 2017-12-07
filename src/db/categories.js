@@ -1,4 +1,5 @@
 const routes = require('../routes');
+var oracledb = require('oracledb');
 
 /**
  * Gets all categories from the BP_CATEGORY table in the database
@@ -6,7 +7,9 @@ const routes = require('../routes');
  */
 module.exports.getCategories = function getCategories(connection) {
     return connection.execute(
-        `SELECT * FROM BP_CATEGORY`, []
+        `SELECT * FROM BP_CATEGORY`, [], {
+            outFormat: oracledb.OBJECT
+        }
     )
     .then(
         (res) => {
@@ -34,7 +37,9 @@ module.exports.getItemCategories = function getItemCategories(connection, ITEM_I
     return connection.execute(
         `SELECT * 
         FROM BP_ITEM_CATEGORY
-        WHERE ITEM_ID=:ITEM_ID`, [ITEM_ID]
+        WHERE ITEM_ID=:ITEM_ID`, [ITEM_ID], {
+            outFormat: oracledb.OBJECT
+        }
     )
     .then(
         (res) => {

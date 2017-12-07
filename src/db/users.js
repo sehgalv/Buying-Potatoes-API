@@ -1,3 +1,5 @@
+var oracledb = require('oracledb');
+
 const routes = require('../routes');
 
 /**
@@ -6,7 +8,9 @@ const routes = require('../routes');
  */
 module.exports.getUsers = function getUsers(connection) {
     return connection.execute(
-        `SELECT * FROM BP_USER`, []
+        `SELECT * FROM BP_USER`, [],  {
+            outFormat: oracledb.OBJECT
+        }
     )
     .then(
         (res) => {
@@ -34,7 +38,9 @@ module.exports.getUser = function getUser(connection, USER_ID) {
     return connection.execute(
         `SELECT * 
         FROM BP_USER
-        WHERE USER_ID=:USER_ID`, [USER_ID]
+        WHERE USER_ID=:USER_ID`, [USER_ID],  {
+            outFormat: oracledb.OBJECT
+        }
     )
     .then(
         (res) => {
@@ -67,8 +73,11 @@ module.exports.getUser = function getUser(connection, USER_ID) {
 module.exports.getUserLists = function getUserLists(connection, USER_ID) {
     return connection.execute(
         `SELECT * 
-        FROM BP_USER_LIST
-        WHERE USER_ID=:USER_ID`, [USER_ID]
+        FROM BP_USER_LIST ul left join BP_USER u
+        on ul.user_id = u.user_id
+        WHERE ul.USER_ID=:USER_ID`, [USER_ID], {
+            outFormat: oracledb.OBJECT
+        }
     )
     .then(
         (res) => {
@@ -93,5 +102,40 @@ module.exports.getUserLists = function getUserLists(connection, USER_ID) {
     );
 };
 
-
+/**
+ * Gets address from the join of BP_USER and BP_ADDRESS table in the database based on USER_ID requested
+ * @param {*} connection  
+ * @param {*} USER_ID
+ */
+module.exports.getUserAddress = function getUserAddress(connection, USER_ID) {
+    return connection.execute(
+        `SELECT *
+        FROM BP_USER U RIGHT JOIN BP_ADDRESS AD
+        ON U.ADDRESS_ID = AD.ADDRESS_ID
+        WHERE USER_ID=:USER_ID`, [USER_ID],  {
+            outFormat: oracledb.OBJECT
+        }
+    )
+    .then(
+        (res) => {
+            if(res.rows.length === 0) {
+                return Promise.reject({
+                    location: `Address of user with USER_ID'${USER_ID}'.`,
+                    err: any,
+                });
+            } else {
+                return Promise.resolve({
+                    status: 200,
+                    data: res.rows
+                });
+            }
+        },
+        (err) => {
+            return Promise.reject({
+                location: `Get lists related to user`,
+                err: any,
+            })
+        }
+    );
+};
 

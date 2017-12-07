@@ -1,4 +1,5 @@
 const routes = require('../routes');
+var oracledb = require('oracledb');
 
 /**
  * Gets all stores from the BP_STORE table in the database
@@ -6,7 +7,9 @@ const routes = require('../routes');
  */
 module.exports.getStores = function getStores(connection) {
     return connection.execute(
-        `SELECT * FROM BP_STORE`, []
+        `SELECT * FROM BP_STORE`, [], {
+            outFormat: oracledb.OBJECT
+        }
     )
     .then(
         (res) => {
@@ -34,7 +37,9 @@ module.exports.getStore = function getStore(connection, STORE_ID) {
     return connection.execute(
         `SELECT * 
         FROM BP_STORE
-        WHERE STORE_ID=:STORE_ID`, [STORE_ID]
+        WHERE STORE_ID=:STORE_ID`, [STORE_ID], {
+            outFormat: oracledb.OBJECT
+        }
     )
     .then(
         (res) => {
@@ -67,8 +72,13 @@ module.exports.getStore = function getStore(connection, STORE_ID) {
 module.exports.getStoreOwner = function getStoreOwner(connection, USER_ID) {
     return connection.execute(
         `SELECT * 
-        FROM BP_STORE_OWNER
-        WHERE USER_ID=:USER_ID`, [USER_ID]
+        FROM BP_STORE_OWNER so left join BP_STORE s
+        on so.store_id = s.store_id
+        left join BP_USER u
+        on so.user_id = u.user_id
+        WHERE so.USER_ID=:USER_ID`, [USER_ID], {
+            outFormat: oracledb.OBJECT
+        }
     )
     .then(
         (res) => {

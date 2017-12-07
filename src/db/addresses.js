@@ -1,4 +1,5 @@
 const routes = require('../routes');
+var oracledb = require('oracledb');
 
 /**
  * Gets all addresses from the BP_ADDRESSES table in the database
@@ -6,7 +7,9 @@ const routes = require('../routes');
  */
 module.exports.getAddresses = function getAddresses(connection) {
     return connection.execute(
-        `SELECT * FROM BP_ADDRESS`, []
+        `SELECT * FROM BP_ADDRESS`, [], {
+            outFormat: oracledb.OBJECT
+        }
     )
     .then(
         (res) => {
@@ -34,7 +37,9 @@ module.exports.getAddress = function getAddress(connection, ADDRESS_ID) {
     return connection.execute(
         `SELECT * 
         FROM BP_ADDRESS 
-        WHERE ADDRESS_ID= :ADDRESS_ID`, [ADDRESS_ID]
+        WHERE ADDRESS_ID= :ADDRESS_ID`, [ADDRESS_ID], {
+            outFormat: oracledb.OBJECT
+        }
     )
     .then(
         (res) => {
@@ -68,7 +73,9 @@ exports.putAddress = function putAddress(connection, ADDRESS_ID){
     return connection.execute(`
         INSERT INTO BP_ADDRESS
         VALUES (:ADDRESS_ID)
-    `, [ADDRESS_ID])
+    `, [ADDRESS_ID], {
+        outFormat: oracledb.OBJECT
+    })
     .then(
         (res) => {
             if(res.rowsAffected === 0)  
