@@ -1,5 +1,4 @@
 const routes = require('../routes');
-// const format = routes.format;
 
 /**
  * Gets all users from the BP_USERS table in the database

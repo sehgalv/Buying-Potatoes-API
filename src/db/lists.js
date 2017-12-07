@@ -1,12 +1,12 @@
 const routes = require('../routes');
 
 /**
- * Gets all categories from the BP_CATEGORY table in the database
+ * Gets all lists from the BP_USERS table in the database
  * @param {*} connection  
  */
-module.exports.getCategories = function getCategories(connection) {
+module.exports.getLists = function getLists(connection) {
     return connection.execute(
-        `SELECT * FROM BP_CATEGORY`, []
+        `SELECT * FROM BP_SHOPPING_LIST`, []
     )
     .then(
         (res) => {
@@ -17,7 +17,7 @@ module.exports.getCategories = function getCategories(connection) {
         },
         (err) => {
             return Promise.reject({
-                location: `Get categories`,
+                location: `Get lists`,
                 err: any,
             })
         }
@@ -26,21 +26,21 @@ module.exports.getCategories = function getCategories(connection) {
 
 
 /**
- * Gets all categories from the BP_ITEM_CATEGORY table in the database based of ITEM_ID requested
+ * Gets single list of items from the BP_SHOPPING_LIST table in the database based of LIST_ID requested
  * @param {*} connection  
- * @param {*} ITEM_ID
+ * @param {*} LIST_ID
  */
-module.exports.getItemCategories = function getItemCategories(connection, ITEM_ID) {
+module.exports.getList = function getList(connection, LIST_ID) {
     return connection.execute(
         `SELECT * 
-        FROM BP_ITEM_CATEGORY
-        WHERE ITEM_ID=:ITEM_ID`, [ITEM_ID]
+        FROM BP_SHOPPING_LIST
+        WHERE LIST_ID=:LIST_ID`, [LIST_ID]
     )
     .then(
         (res) => {
             if(res.rows.length === 0) {
                 return Promise.reject({
-                    location: `Item_id'${ITEM_ID}' does not have any associated categories.`,
+                    location: `LIST with id'${LIST_ID}' does not have any items.`,
                     err: any,
                 });
             } else {
@@ -52,7 +52,7 @@ module.exports.getItemCategories = function getItemCategories(connection, ITEM_I
         },
         (err) => {
             return Promise.reject({
-                location: `Get categories`,
+                location: `Get list`,
                 err: any,
             })
         }

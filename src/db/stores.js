@@ -1,5 +1,4 @@
 const routes = require('../routes');
-// const format = routes.format;
 
 /**
  * Gets all stores from the BP_STORE table in the database

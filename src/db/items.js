@@ -1,5 +1,4 @@
 const routes = require('../routes');
-// const format = routes.format;
 
 /**
  * Gets all items from the BP_ITEMS table in the database

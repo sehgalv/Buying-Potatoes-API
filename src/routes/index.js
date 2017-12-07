@@ -25,6 +25,9 @@ exports.initRouter = connection => {
 
     const users = require('./users');
     users.initRouter(connection, router);
+
+    const lists = require('./lists');
+    lists.initRouter(connection, router);
     return router;
 }
 
