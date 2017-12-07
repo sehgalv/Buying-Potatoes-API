@@ -1,11 +1,41 @@
-const items = require('express').Router();
+const router = require('express').Router();
+const db = require(`../../db/items.js`);
+const routes = require(`../../routes`);
+var oracledb = require('oracledb');
+var error = routes.error;
 
-const all = require('./get');
-items.get('/', all);
 
-const single = require('./_store_id/get');
-items.get('/:store_id', single);
 
-const add = require('./_store_id/post');
-items.post('/:store_id', add);
-module.exports = items;
+exports.initRouter =  (connection,router) => {
+    router.get('/items', (req, res) => {
+        db.getItems(connection)
+        .then(
+            (res2) => res.status(res2.status).json(res2.data),
+            (err) => error(err, res)        );
+
+    });
+
+    router.get('/items/:item_id', (req, res) => {
+        db.getItem(connection, req.params.item_id)
+        .then(
+            (res2) => res.status(res2.status).json(res2.data),
+            (err) => error(err, res)
+        );
+    });
+
+    router.get('/items/stores/:store_id', (req, res) => {
+        db.getItemsInStore(connection, req.params.store_id)
+        .then(
+            (res2) => res.status(res2.status).json(res2.data),
+            (err) => error(err, res)
+        );
+    });
+
+    router.get('/items/:item_id/stores/:store_id', (req, res) => {
+        db.getItemInStore(connection, req.params.item_id,  req.params.store_id)
+        .then(
+            (res2) => res.status(res2.status).json(res2.data),
+            (err) => error(err, res)
+        );
+    });
+}

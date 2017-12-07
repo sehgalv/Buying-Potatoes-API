@@ -2,12 +2,12 @@ const router = require('express').Router();
 const db = require(`../../db/addresses.js`);
 const routes = require(`../../routes`);
 var oracledb = require('oracledb');
+var error = routes.error;
 
 
 
 exports.initRouter =  (connection,router) => {
     router.get('/addresses', (req, res) => {
-        console.log("gets here");        
         db.getAddresses(connection)
         .then(
             (res2) => res.status(res2.status).json(res2.data),
@@ -16,7 +16,6 @@ exports.initRouter =  (connection,router) => {
     });
 
     router.get('/addresses/:address_id', (req, res) => {
-        console.log("inside single address");
         db.getAddress(connection, req.params.address_id)
         .then(
             (res2) => res.status(res2.status).json(res2.data),

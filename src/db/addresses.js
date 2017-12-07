@@ -1,6 +1,9 @@
 const routes = require('../routes');
-// const format = routes.format;
 
+/**
+ * Gets all addresses from the BP_ADDRESSES table in the database
+ * @param {*} connection  
+ */
 module.exports.getAddresses = function getAddresses(connection) {
     return connection.execute(
         `SELECT * FROM BP_ADDRESS`, []
@@ -22,7 +25,7 @@ module.exports.getAddresses = function getAddresses(connection) {
 };
 
 /**
- * Get's single address from the BP_ADDRESS table in the database based of ADDRESS_ID requested
+ * Gets single address from the BP_ADDRESS table in the database based of ADDRESS_ID requested
  * @param {*} connection 
  * @param {*} ADDRESS_ID 
  */

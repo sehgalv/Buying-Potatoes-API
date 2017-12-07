@@ -2,7 +2,7 @@ const routes = require('../routes');
 // const format = routes.format;
 
 /**
- * Get's single address from the BP_ADDRESS table in the database based of ADDRESS_ID requested
+ * Gets all categories from the BP_CATEGORY table in the database
  * @param {*} connection  
  */
 module.exports.getCategories = function getCategories(connection) {
@@ -27,7 +27,7 @@ module.exports.getCategories = function getCategories(connection) {
 
 
 /**
- * Get's single address from the BP_ADDRESS table in the database based of ADDRESS_ID requested
+ * Gets all categories from the BP_ITEM_CATEGORY table in the database based of ITEM_ID requested
  * @param {*} connection  
  * @param {*} ITEM_ID
  */
@@ -57,36 +57,5 @@ module.exports.getItemCategories = function getItemCategories(connection, ITEM_I
                 err: any,
             })
         }
-    );
-};
-
-
-/**
- * Adds address to BP_ADDRESS table in the database
- * @param {*} connection 
- * @param {*} ADDRESS_ID 
- */
-exports.putAddress = function putAddress(connection, ADDRESS_ID){
-    return connection.execute(`
-        INSERT INTO BP_ADDRESS
-        VALUES (:ADDRESS_ID)
-    `, [ADDRESS_ID])
-    .then(
-        (res) => {
-            if(res.rowsAffected === 0)  
-                return Promise.reject({
-                    location: `PUT address`,
-                    err: `Unsuccessful in adding address`
-                });
-            else
-                return Promise.resolve({
-                    status: 200,
-                    data: `Successfully added address ${ADDRESS_ID}`
-                });
-        },
-        (err) => Promise.reject({
-            location: `PUT address`,
-            err: err
-        })
     );
 };
