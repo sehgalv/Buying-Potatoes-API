@@ -13,12 +13,9 @@ exports.initRouter = connection => {
 
     const addresses = require('./addresses');
     addresses.initRouter(connection, router);
-    
-    // routes.use('/addresses', addresses);
-    
-    // const categories = require('./categories');
-    // categories.initRouter(connection, routes);
+        
+    const categories = require('./categories');
+    categories.initRouter(connection, router);
     return router;
 }
-// routes.use('/categories', categories);
 

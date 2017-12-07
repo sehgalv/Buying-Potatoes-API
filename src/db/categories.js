@@ -1,9 +1,13 @@
 const routes = require('../routes');
 // const format = routes.format;
 
-module.exports.getAddresses = function getAddresses(connection) {
+/**
+ * Get's single address from the BP_ADDRESS table in the database based of ADDRESS_ID requested
+ * @param {*} connection  
+ */
+module.exports.getCategories = function getCategories(connection) {
     return connection.execute(
-        `SELECT * FROM BP_ADDRESS`, []
+        `SELECT * FROM BP_CATEGORY`, []
     )
     .then(
         (res) => {
@@ -14,30 +18,30 @@ module.exports.getAddresses = function getAddresses(connection) {
         },
         (err) => {
             return Promise.reject({
-                location: `Get addresses`,
+                location: `Get categories`,
                 err: any,
             })
         }
     );
 };
 
+
 /**
  * Get's single address from the BP_ADDRESS table in the database based of ADDRESS_ID requested
- * @param {*} connection 
- * @param {*} ADDRESS_ID 
+ * @param {*} connection  
+ * @param {*} ITEM_ID
  */
-
-module.exports.getAddress = function getAddress(connection, ADDRESS_ID) {
+module.exports.getItemCategories = function getItemCategories(connection, ITEM_ID) {
     return connection.execute(
         `SELECT * 
-        FROM BP_ADDRESS 
-        WHERE ADDRESS_ID= :ADDRESS_ID`, [ADDRESS_ID]
+        FROM BP_ITEM_CATEGORY
+        WHERE ITEM_ID=:ITEM_ID`, [ITEM_ID]
     )
     .then(
         (res) => {
             if(res.rows.length === 0) {
                 return Promise.reject({
-                    location: `Address with id'${ADDRESS_ID}' does not exist.`,
+                    location: `Item_id'${ITEM_ID}' does not have any associated categories.`,
                     err: any,
                 });
             } else {
@@ -49,12 +53,13 @@ module.exports.getAddress = function getAddress(connection, ADDRESS_ID) {
         },
         (err) => {
             return Promise.reject({
-                location: `Get address`,
+                location: `Get categories`,
                 err: any,
             })
         }
     );
 };
+
 
 /**
  * Adds address to BP_ADDRESS table in the database
