@@ -66,3 +66,7 @@ module.exports.getList = function getList(connection, LIST_ID) {
         }
     );
 };
+
+
+// PUT: ADD ITEM-LIST PAIR TO SHOPPING_LIST
+// DELETE: ITEM-LIST PAIR FROM SHOPPING_LIST

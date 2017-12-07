@@ -72,8 +72,15 @@ module.exports.getAddress = function getAddress(connection, ADDRESS_ID) {
 exports.putAddress = function putAddress(connection, ADDRESS_ID){
     return connection.execute(`
         INSERT INTO BP_ADDRESS
-        VALUES (:ADDRESS_ID)
-    `, [ADDRESS_ID], {
+        VALUES (
+            **SEQ GOES HERE**,
+            :street_number,
+            :street_name,
+            :apt_number,
+            :city,
+            :state_abbreviation,
+            :zip)`,
+            [ADDRESS_ID], {
         outFormat: oracledb.OBJECT
     })
     .then(

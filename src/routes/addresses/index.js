@@ -23,5 +23,11 @@ exports.initRouter =  (connection,router) => {
         );
     });
 
-    //put address
+    router.put('/addresses', (req, res) => { 
+        db.putAddress(connection)
+        .then(
+            (res2) => res.status(res2.status).json(res2.data),
+            (err) => error(err, res));
+
+    });
 }

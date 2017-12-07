@@ -139,3 +139,11 @@ module.exports.getUserAddress = function getUserAddress(connection, USER_ID) {
     );
 };
 
+
+// ADD USER... if exists, update information
+
+// ADD LIST TO USER
+
+// REMOVE LIST FROM USER
+
+// DELETE USER

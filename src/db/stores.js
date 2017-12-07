@@ -177,8 +177,14 @@ module.exports.getStoreOwner = function getStoreOwner(connection, USER_ID) {
     );
 };
 
-//put item in BP_ITEM
-//put item in BP_ITEM_IN_STORE
-//delete item from store
+// PUT STORE: add store, check if previously exists based on what factors?
+
+// PUT USER - STORE PAIR item in BP_ITEM_IN_STORE... check if pairing previously exists
+
+// DELETE STORE??
+
+// DELETE USER - STORE PAIR
+
+// PUT HOURS.. if primary key exists, update hours
 
 

@@ -63,3 +63,7 @@ module.exports.getItemCategories = function getItemCategories(connection, ITEM_I
         }
     );
 };
+
+//PUT: add category
+
+//DELTE ITEM-CATEGORY PAIR FROM BP_ITEM_CATEGORY

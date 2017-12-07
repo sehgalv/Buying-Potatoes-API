@@ -145,6 +145,6 @@ module.exports.getItemInStore = function getItemInStore(connection, ITEM_ID, STO
 
 //put item in BP_ITEM
 //put item in BP_ITEM_IN_STORE
-//delete item from store
+//delete item from store (ITEM - STORE PAIR)
 
 
