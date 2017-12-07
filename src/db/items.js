@@ -144,7 +144,22 @@ module.exports.getItemInStore = function getItemInStore(connection, ITEM_ID, STO
 };
 
 //put item in BP_ITEM
-//put item in BP_ITEM_IN_STORE
+/*
+    INSERT INTO BP_ITEM
+    VALUES (SEQ, :ITEM_NAME, :ITEM_DESCRIPTION)
+*/
+
+//put item in BP_ITEM_IN_STORE... needs to be updated if primary key pair aready exists
+/*
+    INSERT INTO BP_ITEM_IN_STORE
+    VALUES (:ITEM_ID, :STORE_ID, :PRICE)
+*/
+
 //delete item from store (ITEM - STORE PAIR)
+/*
+    DELETE FROM BP_ITEM_IN_STORE
+    WHERE ITEM_ID = :ITEM_ID
+    AND STORE_ID = :STORE_ID
+*/
 
 

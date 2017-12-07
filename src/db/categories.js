@@ -64,6 +64,9 @@ module.exports.getItemCategories = function getItemCategories(connection, ITEM_I
     );
 };
 
-//PUT: add category
-
-//DELTE ITEM-CATEGORY PAIR FROM BP_ITEM_CATEGORY
+//DELETE ITEM-CATEGORY PAIR FROM BP_ITEM_CATEGORY
+/*
+DELETE FROM BP_ITEM_CATEGORY
+WHERE ITEM_ID = :ITEM_ID
+AND CATEGORY_NAME = :CATEGORY_NAME;
+*/

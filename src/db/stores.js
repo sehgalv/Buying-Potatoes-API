@@ -178,13 +178,29 @@ module.exports.getStoreOwner = function getStoreOwner(connection, USER_ID) {
 };
 
 // PUT STORE: add store, check if previously exists based on what factors?
+/*
+    INSERT INTO BP_STORE
+    VALUES (SEQ.next, :STORE_NAME, :ADDRESS_ID, :PHONE_NUMBER)
+*/
 
 // PUT USER - STORE PAIR item in BP_ITEM_IN_STORE... check if pairing previously exists
+/*
+    INSERT INTO BP_STORE_OWNER
+    VALUES (:USER_ID, :STORE_ID)
+*/
 
 // DELETE STORE??
 
 // DELETE USER - STORE PAIR
 
-// PUT HOURS.. if primary key exists, update hours
+/*
+DELETE FROM BP_STORE_OWNER
+WHERE STORE_ID = :STORE_ID
+*/
 
+// PUT HOURS.. if primary key exists, update hours
+/*
+INSERT INTO BP_STORE_HOURS
+VALUES (:STORE_ID, :DAY, :OPEN, :CLOSE)
+*/
 

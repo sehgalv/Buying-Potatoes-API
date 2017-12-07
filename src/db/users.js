@@ -141,9 +141,21 @@ module.exports.getUserAddress = function getUserAddress(connection, USER_ID) {
 
 
 // ADD USER... if exists, update information
+/*
+INSERT INTO BP_USER
+VALUES (SEQ, :user_first_name, :user_last_name, :user_email, :address_id, :user_password)
+*/
 
 // ADD LIST TO USER
+/*
+INSERT INTO BP_USER_LIST
+VALUES (:USER_ID, :LIST_ID)
+*/
 
 // REMOVE LIST FROM USER
+/*
+DELETE FROM BP_USER_LIST
+WHERE USER_ID = :USER_ID
+AND LIST_ID = :LIST_ID
+*/
 
-// DELETE USER
