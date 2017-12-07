@@ -14,26 +14,20 @@ oracledb.getConnection(config,
             console.error(err.message);
             return;// callback(err);
         }
-        // if(connection) {
-        //     console.log("connection: "+connection);
-        //     return;
-        // }
-        // callback(null, connection);
         console.log(`Connected to database`);
 
         app.use(function (req, res, next) {
             res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200');
             res.setHeader('Access-Control-Allow-Methods', 'GET, PUT, DELETE, OPTIONS');
             res.header('Access-Control-Allow-Headers', 'X-Requested-With,Content-Type');
-            console.log('Something is happening.');
-            next(); // make sure we go to the next routes and don't stop here
+            next(); // make sure we reach next route
         });
 
         app.use(bodyParser.json());
         app.use('/api', routes.initRouter(connection));
 
         app.listen(port, () => {
-            console.log('listening on port 3000');
+            console.log(`listening on port '${port}'`);
         });
     });
 
