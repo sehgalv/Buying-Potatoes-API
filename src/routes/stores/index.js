@@ -23,6 +23,14 @@ exports.initRouter =  (connection,router) => {
         );
     });
 
+    router.get('/stores/:store_id/hours', (req, res) => {
+        db.getStoreHours(connection, req.params.store_id)
+        .then(
+            (res2) => res.status(res2.status).json(res2.data),
+            (err) => error(err, res)
+        );
+    });
+
     router.get('/stores/user/:user_id', (req, res) => {
         db.getStoreOwner(connection, req.params.user_id)
         .then(
@@ -30,4 +38,13 @@ exports.initRouter =  (connection,router) => {
             (err) => error(err, res)
         );
     });
+
+    router.get('/stores/:store_id/address', (req, res) => {
+        db.getStoreAddress(connection, req.params.store_id)
+        .then(
+            (res2) => res.status(res2.status).json(res2.data),
+            (err) => error(err, res)
+        );
+    });
+    
 }
