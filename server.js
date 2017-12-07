@@ -9,7 +9,6 @@ var port = 3000;
 
 oracledb.getConnection(config,
     (err, connection) => {
-        console.log(config);
         if (err) {
             console.error(err.message);
             return;// callback(err);
