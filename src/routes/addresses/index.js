@@ -12,7 +12,7 @@ exports.initRouter =  (connection,router) => {
         // .then(
         //     (res2) => res.status(res2.status).json(res2.data),
         //     (err) => error(err, res)        );
-        connection.execute("SELECT * FROM BP_ADDRESS;", {}, {
+        connection.execute("SELECT * FROM BP_ADDRESS", {}, {
             outFormat: oracledb.OBJECT // Return the result as Object
         }, function (err, result) {
             if (err) {

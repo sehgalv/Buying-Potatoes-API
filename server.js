@@ -2,7 +2,7 @@ const app = require('express')();
 const routes = require('./src/routes');
 var bodyParser = require('body-parser');
 var oracledb = require('oracledb');
-const config = require(`./src/config/dbconfig.js`);
+const config = require(`./src/config/config.json`);
 
 var port = 3000;
 
@@ -14,10 +14,10 @@ oracledb.getConnection(config,
             console.error(err.message);
             return;// callback(err);
         }
-        if(connection) {
-            console.log("connection: "+connection);
-            return;
-        }
+        // if(connection) {
+        //     console.log("connection: "+connection);
+        //     return;
+        // }
         // callback(null, connection);
         console.log(`Connected to database`);
 

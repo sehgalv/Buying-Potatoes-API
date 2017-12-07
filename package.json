@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "preinstall": "set OCI_LIB_DIR=C:\\Oracle\\instantclient\\sdk\\lib\\msvc; set OCI_INC_DIR=C:\\Oracle\\instantclient\\sdk\\include",
+    "postinstall": "copy C:\\Oracle\\instantclient\\* node_modules\\oracledb\\build\\Release"
   },
   "repository": {
     "type": "git",
