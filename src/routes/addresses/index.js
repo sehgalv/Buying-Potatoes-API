@@ -23,8 +23,8 @@ exports.initRouter =  (connection,router) => {
         );
     });
 
-    router.put('/addresses', (req, res) => { 
-        db.putAddress(connection, req.body)
+    router.post('/addresses', (req, res) => { 
+        db.postAddress(connection, req.body)
         .then(
             (res2) => res.status(res2.status).json(res2.data),
             (err) => error(err, res));

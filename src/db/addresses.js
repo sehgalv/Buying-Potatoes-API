@@ -1,6 +1,5 @@
 const routes = require('../routes');
 var oracledb = require('oracledb');
-
 /**
  * Gets all addresses from the BP_ADDRESSES table in the database
  * @param {*} connection  
@@ -69,7 +68,7 @@ module.exports.getAddress = function getAddress(connection, ADDRESS_ID) {
  * @param {*} connection 
  * @param {*} ADDRESS_ID 
  */
-exports.putAddress = function putAddress(connection, address){
+exports.postAddress = function putAddress(connection, address){
     console.log(address);
     return connection.execute(`
         INSERT INTO BP_ADDRESS
@@ -91,12 +90,14 @@ exports.putAddress = function putAddress(connection, address){
             address.ZIP,
             address.LATITUDE,
             address.LONGITUDE
-            ], {})
+            ], {
+                autoCommit : true
+            })
     .then(
         (res) => {
             if(res.rowsAffected === 0)  
                 return Promise.reject({
-                    location: `PUT address`,
+                    location: `POST address`,
                     err: `Unsuccessful in adding address`
                 });
             else
@@ -110,7 +111,7 @@ exports.putAddress = function putAddress(connection, address){
                 
         },
         (err) => Promise.reject({
-            location: `PUT address`,
+            location: `POST address`,
             err: err
         })
     );
