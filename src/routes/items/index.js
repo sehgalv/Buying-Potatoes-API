@@ -38,4 +38,18 @@ exports.initRouter =  (connection,router) => {
             (err) => error(err, res)
         );
     });
+
+    router.post('/items', (req, res) => {
+        db.postItem(connection, req.body)
+        .then(
+            (res2) => res.status(res2.status).json(res2.data),
+            (err) => error(err, res));
+    });
+
+    router.put('/items/:item_id/stores/:store_id', (req, res) => {
+        db.putItemInStore(connection, req.params.item_id,  req.params.store_id, req.body)
+        .then(
+            (res2) => res.status(res2.status).json(res2.data),
+            (err) => error(err, res));
+    });
 }

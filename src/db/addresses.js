@@ -68,7 +68,7 @@ module.exports.getAddress = function getAddress(connection, ADDRESS_ID) {
  * @param {*} connection 
  * @param {*} ADDRESS_ID 
  */
-exports.postAddress = function putAddress(connection, address){
+exports.postAddress = function postAddress(connection, address){
     console.log(address);
     return connection.execute(`
         INSERT INTO BP_ADDRESS
