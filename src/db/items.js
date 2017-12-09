@@ -301,3 +301,34 @@ function checkItemInStoreDoesntExist(connection, ITEM_ID, STORE_ID) {
     WHERE ITEM_ID = :ITEM_ID
     AND STORE_ID = :STORE_ID
 */
+
+module.exports.deleteItemInStore = function deleteItemInStore(connection, ITEM_ID, STORE_ID) {
+    return connection.execute(
+        `DELETE FROM BP_ITEM_IN_STORE
+        WHERE ITEM_ID = :ITEM_ID
+        AND STORE_ID = :STORE_ID`, [ITEM_ID, STORE_ID], {
+            autoCommit: true
+        }
+    )
+    .then(
+        (res) => {
+            if(res.rowsAffected === 0)  
+                return Promise.reject({
+                    location: `DELETE item in store`,
+                    err: `Unsuccessful in deleting item in store`
+                });
+            else
+                {
+                    return Promise.resolve({
+                        status: 200,
+                        data: `Successfully removed item in store`
+                    });
+                }
+                
+        },
+        (err) => Promise.reject({
+            location: `DELETE item in store`,
+            err: err
+        })
+    );
+};

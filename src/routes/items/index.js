@@ -52,4 +52,11 @@ exports.initRouter =  (connection,router) => {
             (res2) => res.status(res2.status).json(res2.data),
             (err) => error(err, res));
     });
+
+    router.delete('/items/:item_id/stores/:store_id', (req, res) => {
+        db.deleteItemInStore(connection, req.params.item_id,  req.params.store_id)
+        .then(
+            (res2) => res.status(res2.status).json(res2.data),
+            (err) => error(err, res));
+    });
 }
