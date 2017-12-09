@@ -22,5 +22,19 @@ exports.initRouter =  (connection,router) => {
             (err) => error(err, res)
         );
     });
+
+    router.post('/categories', (req, res) => { 
+        db.postItemCategory(connection, req.body)
+        .then(
+            (res2) => res.status(res2.status).json(res2.data),
+            (err) => error(err, res));
+    });
+    
+    router.delete('/categories', (req, res) => { 
+        db.deleteItemCategory(connection, req.body)
+        .then(
+            (res2) => res.status(res2.status).json(res2.data),
+            (err) => error(err, res));
+    });
 }
 
