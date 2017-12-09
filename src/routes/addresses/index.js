@@ -24,7 +24,7 @@ exports.initRouter =  (connection,router) => {
     });
 
     router.put('/addresses', (req, res) => { 
-        db.putAddress(connection)
+        db.putAddress(connection, req.body)
         .then(
             (res2) => res.status(res2.status).json(res2.data),
             (err) => error(err, res));
