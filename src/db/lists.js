@@ -2,7 +2,7 @@ const routes = require('../routes');
 var oracledb = require('oracledb');
 
 /**
- * Gets single list of items from the BP_SHOPPING_LIST table in the database based of LIST_ID requested
+ * Gets single list of items from the BP_LIST_ITEMS table in the database based of LIST_ID requested
  * @param {*} connection  
  * @param {*} LIST_ID
  */
