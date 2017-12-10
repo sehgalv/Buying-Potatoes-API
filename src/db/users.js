@@ -72,9 +72,12 @@ module.exports.getUser = function getUser(connection, USER_ID) {
  */
 module.exports.getUserLists = function getUserLists(connection, USER_ID) {
     return connection.execute(
-        `SELECT * 
-        FROM BP_USER_LIST ul left join BP_USER u
-        on ul.user_id = u.user_id
+        `SELECT li.LIST_ID, sl.LIST_NAME, i.item_id, i.item_name, i.item_description, ic.category_name
+        FROM BP_USER_LIST ul 
+        left join BP_LIST_ITEMS li on ul.list_id = li.list_id 
+        left join BP_ITEM i on i.item_id = li.item_id
+        left join BP_ITEM_CATEGORY ic on ic.item_id = li.item_id
+        left join BP_SHOPPING_LIST sl on sl.list_id = li.list_id
         WHERE ul.USER_ID=:USER_ID`, [USER_ID], {
             outFormat: oracledb.OBJECT
         }
@@ -87,9 +90,55 @@ module.exports.getUserLists = function getUserLists(connection, USER_ID) {
                     err: any,
                 });
             } else {
+                var tempListIDs = [];
+                for(var i in res.rows){
+                    var listIDName = {
+                        list_id: res.rows[i].LIST_ID,
+                        list_name: res.rows[i].list_name
+                    };
+                    tempListIDs.push(listIDName);
+                    }
+                    // var listIDs = tempListIDs.reduce(function(a, b){
+                    //     if (a.indexOf(b.list_id) == -1 && a.indexOf(b.list_name) == -1) {
+                    //         a.push({
+                    //             list_id: b.list_id,
+                    //             list_name: b.list_name})
+                    //     }
+                    //     return a;
+                    // }, []);
+                    var listIDs = tempListIDs.reduce(function(a, b){
+                        if (a.indexOf(b.list_id) == -1) {
+                            a.push(
+                                b.list_id)
+                        }
+                        return a;
+                    }, []);
+                var itemsInList = [];
+                console.log(listIDs, res.rows);
+                for (var j in listIDs) {
+                    var j_list_name;
+                    var l_items = [];
+                    for(var k in res.rows){
+                        if (listIDs[j] === res.rows[k].LIST_ID){
+                            j_list_name = res.rows[k].LIST_NAME;
+                            l_items.push({
+                                item_id: res.rows[k].ITEM_ID,
+                                item_name: res.rows[k].ITEM_NAME,
+                                item_desc: res.rows[k].ITEM_DESCRIPTION,
+                                item_category: res.rows[k].CATEGORY_NAME
+                            })
+                        }
+                    }
+                    console.log(listIDs[j].LIST_ID);
+                    itemsInList.push({
+                        list_id: listIDs[j],
+                        list_name: j_list_name,
+                        items: l_items
+                    });
+                }
                 return Promise.resolve({
                     status: 200,
-                    data: res.rows
+                    data: itemsInList
                 });
             }
         },

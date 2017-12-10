@@ -191,81 +191,35 @@ exports.postItem = function postItem(connection, item) {
  * @param {*} ITEM_ID 
  */
 exports.putItemInStore = function putItemInStore(connection, ITEM_ID, STORE_ID, item) {
-    console.log(item);
-    return checkItemInStoreDoesntExist(connection, ITEM_ID, STORE_ID)
-        .then(
-        (res) => {
-            return connection.execute(`
-            INSERT INTO BP_ITEM_IN_STORE
-            VALUES (
-                :ITEM_ID,
-                :STORE_ID,
-                :PRICE`,
-                [
-                    ITEM_ID,
-                    STORE_ID,
-                    item.PRICE
-                ], {
-                    autoCommit: true
-                })
-                .then(
-                (res) => {
-                    if (res.rowsAffected === 0)
-                        return Promise.reject({
-                            location: `PUT item`,
-                            err: `Unsuccessful in adding item to store`
-                        });
-                    else {
-                        console.log(JSON.stringify(res));
-                        return Promise.resolve({
-                            status: 200,
-                            data: `Successfully added item to store`
-                        });
-                    }
-
-                },
-                (err) => Promise.reject({
-                    location: `PUT item`,
-                    err: err
-                })
-                );
-        },
-        (err) => {
-            return connection.execute(`
-        UPDATE BP_ITEM_IN_STORE
-        SET PRICE = :PRICE
-        WHERE ITEM_ID = :ITEM_ID
-        AND STORE_ID = :STORE_ID`,
-                [
-                    ITEM_ID,
-                    STORE_ID,
-                    item.PRICE
-                ], {
-                    autoCommit: true
-                })
-                .then(
-                (res) => {
-                    if (res.rowsAffected === 0)
-                        return Promise.reject({
-                            location: `POST item`,
-                            err: `Unsuccessful in updating item price`
-                        });
-                    else {
-                        console.log(JSON.stringify(res));
-                        return Promise.resolve({
-                            status: 200,
-                            data: `Successfully updated item price`
-                        });
-                    }
-
-                },
-                (err) => Promise.reject({
-                    location: `PUT item`,
-                    err: err
-                })
-                );
-        });
-
+    return connection.execute(
+    `merge into BP_ITEM_IN_STORE s
+    using (select item_id, store_id, price from BP_ITEM_IN_STORE
+            where item_id = :ITEM_ID and store_id = :STORE_ID) p
+    on (s.item_id = p.item_id and s.store_id = p.store_id) 
+    when matched then update set s.price = :PRICE
+    when not matched then insert (item_id, store_id, price) values (:ITEM_ID,:STORE_ID, :PRICE)`, [ITEM_ID, STORE_ID, item.price]
+)
+.then(
+    (res) => {
+        if(res.rows.length === 0) {
+            return Promise.reject({
+                location: `unsuccessful`,
+                err: any,
+            });
+        } else {
+            return Promise.resolve({
+                status: 200,
+                data: res.rows
+            });
+        }
+    },
+    (err) => {
+        return Promise.reject({
+            location: `PUT items`,
+            err: any,
+        })
+    }
+);
 };
 
 function checkItemInStoreDoesntExist(connection, ITEM_ID, STORE_ID) {
