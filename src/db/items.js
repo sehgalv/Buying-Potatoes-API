@@ -191,6 +191,7 @@ exports.postItem = function postItem(connection, item) {
  * @param {*} ITEM_ID 
  */
 exports.putItemInStore = function putItemInStore(connection, ITEM_ID, STORE_ID, item) {
+    console.log(ITEM_ID, STORE_ID, item);
     return connection.execute(
     `UPDATE BP_ITEM_IN_STORE
     SET PRICE = :PRICE
@@ -224,36 +225,6 @@ exports.putItemInStore = function putItemInStore(connection, ITEM_ID, STORE_ID, 
             })
             );
     };
-//     return connection.execute(
-//     `merge into BP_ITEM_IN_STORE s
-//     using (select item_id, store_id, price from BP_ITEM_IN_STORE
-//             where item_id = :ITEM_ID and store_id = :STORE_ID) p
-//     on (s.item_id = p.item_id and s.store_id = p.store_id) 
-//     when matched then update set s.price = :PRICE
-//     when not matched then insert (item_id, store_id, price) values (:ITEM_ID,:STORE_ID, :PRICE)`, [ITEM_ID, STORE_ID, item.price]
-// )
-// .then(
-//     (res) => {
-//         if(res.rowsAffected === 0) {
-//             return Promise.reject({
-//                 location: `unsuccessful`,
-//                 err: "unsuccessful in inserting item",
-//             });
-//         } else {
-//             return Promise.resolve({
-//                 status: 200,
-//                 data: res.rows
-//             });
-//         }
-//     },
-//     (err) => {
-//         return Promise.reject({
-//             location: `PUT items`,
-//             err: any,
-//         })
-//     }
-// );
-// };
 
 function checkItemInStoreDoesntExist(connection, ITEM_ID, STORE_ID) {
     return connection.execute(
@@ -297,26 +268,24 @@ module.exports.deleteItemInStore = function deleteItemInStore(connection, item_i
             autoCommit: true
         }
     )
-    .then(
+        .then(
         (res) => {
-            console.log(res.rowsAffected);
-            if(res.rowsAffected === 0)  
+            if (res.rowsAffected === 0)
                 return Promise.reject({
                     location: `DELETE item in store`,
                     err: `Unsuccessful in deleting item in store`
                 });
-            else
-                {
-                    return Promise.resolve({
-                        status: 200,
-                        data: `Successfully removed item in store`
-                    });
-                }
-                
+            else {
+                return Promise.resolve({
+                    status: 200,
+                    data: `Successfully removed item in store`
+                });
+            }
+
         },
         (err) => Promise.reject({
             location: `DELETE item in store`,
             err: err
         })
-    );
+        );
 };
