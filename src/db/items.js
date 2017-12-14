@@ -116,7 +116,7 @@ module.exports.getItemInStore = function getItemInStore(connection, ITEM_ID, STO
         LEFT JOIN BP_STORE st
         on itst.store_id = st.store_id
         WHERE itst.STORE_ID=:STORE_ID
-        AND itst.ITEM_ID=:ITEM_ID`, [ITEM_ID, STORE_ID], {
+        AND itst.ITEM_ID=:ITEM_ID`, [STORE_ID, ITEM_ID], {
             outFormat: oracledb.OBJECT
         }
     )
@@ -192,35 +192,68 @@ exports.postItem = function postItem(connection, item) {
  */
 exports.putItemInStore = function putItemInStore(connection, ITEM_ID, STORE_ID, item) {
     return connection.execute(
-    `merge into BP_ITEM_IN_STORE s
-    using (select item_id, store_id, price from BP_ITEM_IN_STORE
-            where item_id = :ITEM_ID and store_id = :STORE_ID) p
-    on (s.item_id = p.item_id and s.store_id = p.store_id) 
-    when matched then update set s.price = :PRICE
-    when not matched then insert (item_id, store_id, price) values (:ITEM_ID,:STORE_ID, :PRICE)`, [ITEM_ID, STORE_ID, item.price]
-)
-.then(
-    (res) => {
-        if(res.rows.length === 0) {
-            return Promise.reject({
-                location: `unsuccessful`,
-                err: any,
-            });
-        } else {
-            return Promise.resolve({
-                status: 200,
-                data: res.rows
-            });
-        }
-    },
-    (err) => {
-        return Promise.reject({
-            location: `PUT items`,
-            err: any,
-        })
-    }
-);
-};
+    `UPDATE BP_ITEM_IN_STORE
+    SET PRICE = :PRICE
+    WHERE ITEM_ID = :ITEM_ID
+    AND STORE_ID = :STORE_ID`,
+            [   
+                item.PRICE,
+                ITEM_ID,
+                STORE_ID
+            ], {
+                autoCommit: true
+            })
+            .then(
+            (res) => {
+                if (res.rowsAffected === 0)
+                    return Promise.reject({
+                        location: `PUT item`,
+                        err: `Unsuccessful in updating item price`
+                    });
+                else {
+                    return Promise.resolve({
+                        status: 200,
+                        data: `Successfully updated item price`
+                    });
+                }
+
+            },
+            (err) => Promise.reject({
+                location: `PUT item`,
+                err: err
+            })
+            );
+    };
+//     return connection.execute(
+//     `merge into BP_ITEM_IN_STORE s
+//     using (select item_id, store_id, price from BP_ITEM_IN_STORE
+//             where item_id = :ITEM_ID and store_id = :STORE_ID) p
+//     on (s.item_id = p.item_id and s.store_id = p.store_id) 
+//     when matched then update set s.price = :PRICE
+//     when not matched then insert (item_id, store_id, price) values (:ITEM_ID,:STORE_ID, :PRICE)`, [ITEM_ID, STORE_ID, item.price]
+// )
+// .then(
+//     (res) => {
+//         if(res.rowsAffected === 0) {
+//             return Promise.reject({
+//                 location: `unsuccessful`,
+//                 err: "unsuccessful in inserting item",
+//             });
+//         } else {
+//             return Promise.resolve({
+//                 status: 200,
+//                 data: res.rows
+//             });
+//         }
+//     },
+//     (err) => {
+//         return Promise.reject({
+//             location: `PUT items`,
+//             err: any,
+//         })
+//     }
+// );
+// };
 
 function checkItemInStoreDoesntExist(connection, ITEM_ID, STORE_ID) {
     return connection.execute(
@@ -256,16 +289,17 @@ function checkItemInStoreDoesntExist(connection, ITEM_ID, STORE_ID) {
     AND STORE_ID = :STORE_ID
 */
 
-module.exports.deleteItemInStore = function deleteItemInStore(connection, ITEM_ID, STORE_ID) {
+module.exports.deleteItemInStore = function deleteItemInStore(connection, item_id, store_id) {
     return connection.execute(
         `DELETE FROM BP_ITEM_IN_STORE
-        WHERE ITEM_ID = :ITEM_ID
-        AND STORE_ID = :STORE_ID`, [ITEM_ID, STORE_ID], {
+        WHERE ITEM_ID = :item_id
+        AND STORE_ID = :store_id`, [item_id, store_id], {
             autoCommit: true
         }
     )
     .then(
         (res) => {
+            console.log(res.rowsAffected);
             if(res.rowsAffected === 0)  
                 return Promise.reject({
                     location: `DELETE item in store`,
