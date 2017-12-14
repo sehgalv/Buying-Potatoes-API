@@ -63,6 +63,28 @@ module.exports.getAddress = function getAddress(connection, ADDRESS_ID) {
     );
 };
 
+module.exports.getStates = function getStates(connection) {
+    return connection.execute(
+        `SELECT * FROM BP_STATE`, [], {
+            outFormat: oracledb.OBJECT
+        }
+    )
+    .then(
+        (res) => {
+            return Promise.resolve({
+                status: 200,
+                data: res.rows
+            })
+        },
+        (err) => {
+            return Promise.reject({
+                location: `Get states`,
+                err: any,
+            })
+        }
+    );
+};
+
 /**
  * Adds address to BP_ADDRESS table in the database
  * @param {*} connection 
