@@ -98,14 +98,6 @@ module.exports.getUserLists = function getUserLists(connection, USER_ID) {
                     };
                     tempListIDs.push(listIDName);
                     }
-                    // var listIDs = tempListIDs.reduce(function(a, b){
-                    //     if (a.indexOf(b.list_id) == -1 && a.indexOf(b.list_name) == -1) {
-                    //         a.push({
-                    //             list_id: b.list_id,
-                    //             list_name: b.list_name})
-                    //     }
-                    //     return a;
-                    // }, []);
                     var listIDs = tempListIDs.reduce(function(a, b){
                         if (a.indexOf(b.list_id) == -1) {
                             a.push(
@@ -114,7 +106,7 @@ module.exports.getUserLists = function getUserLists(connection, USER_ID) {
                         return a;
                     }, []);
                 var itemsInList = [];
-                console.log(listIDs, res.rows);
+                // console.log(listIDs, res.rows);
                 for (var j in listIDs) {
                     var j_list_name;
                     var l_items = [];
@@ -125,15 +117,52 @@ module.exports.getUserLists = function getUserLists(connection, USER_ID) {
                                 item_id: res.rows[k].ITEM_ID,
                                 item_name: res.rows[k].ITEM_NAME,
                                 item_desc: res.rows[k].ITEM_DESCRIPTION,
-                                item_category: res.rows[k].CATEGORY_NAME
                             })
                         }
                     }
-                    console.log(listIDs[j].LIST_ID);
+
+                    var tempItemIds = [];
+                    for (var m in l_items) {
+                        var itemIDNameDescr = {
+                            ITEM_ID: l_items[m].item_id,
+                            ITEM_NAME: l_items[m].item_name,
+                            ITEM_DESCRIPTION: l_items[m].item_desc
+                        };
+                        tempItemIds.push(itemIDNameDescr);
+                    }
+                    var itemIds = tempItemIds.reduce(function(a, b){
+                        if (a.indexOf(b.ITEM_ID) == -1) {
+                            a.push(
+                                b.ITEM_ID)
+                        }
+                        return a;
+                    }, []);
+    
+                    var categoriesInItem = [];     
+                    for (var l in itemIds) {
+                        var j_categories = [];
+                        var j_item_name;              
+                        var j_item_description;                                        
+                        for (var k in res.rows) {
+                                                                         
+                            if(itemIds[l] === res.rows[k].ITEM_ID) {
+                                j_item_name = res.rows[k].ITEM_NAME;
+                                j_item_description = res.rows[k].ITEM_DESCRIPTION;  
+                                j_categories.push(res.rows[k].CATEGORY_NAME)
+                            }
+                        }
+                        categoriesInItem.push({
+                            ITEM_ID: itemIds[l],
+                            ITEM_NAME: j_item_name,
+                            ITEM_DESCRIPTION: j_item_description,
+                            CATEGORIES: j_categories
+                        });
+                    }
+
                     itemsInList.push({
                         list_id: listIDs[j],
                         list_name: j_list_name,
-                        items: l_items
+                        items: categoriesInItem
                     });
                 }
                 return Promise.resolve({
@@ -145,7 +174,7 @@ module.exports.getUserLists = function getUserLists(connection, USER_ID) {
         (err) => {
             return Promise.reject({
                 location: `Get lists related to user`,
-                err: any,
+                err: err,
             })
         }
     );
@@ -170,7 +199,7 @@ module.exports.getUserAddress = function getUserAddress(connection, USER_ID) {
             if(res.rows.length === 0) {
                 return Promise.reject({
                     location: `Address of user with USER_ID'${USER_ID}'.`,
-                    err: any,
+                    err: "Address",
                 });
             } else {
                 return Promise.resolve({

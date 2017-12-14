@@ -253,12 +253,6 @@ function checkItemInStoreDoesntExist(connection, ITEM_ID, STORE_ID) {
 }
 
 
-//delete item from store (ITEM - STORE PAIR)
-/*
-    DELETE FROM BP_ITEM_IN_STORE
-    WHERE ITEM_ID = :ITEM_ID
-    AND STORE_ID = :STORE_ID
-*/
 
 module.exports.deleteItemInStore = function deleteItemInStore(connection, item_id, store_id) {
     return connection.execute(
