@@ -38,4 +38,12 @@ exports.initRouter =  (connection,router) => {
             (err) => error(err, res)
         );
     });
+
+    router.post('/users/:user_id/list', (req, res) => {
+        db.postListToUser(connection, req.params.user_id, req.body)
+        .then(
+            (res2) => res.status(res2.status).json(res2.data),
+            (err) => error(err, res)        );
+
+    });
 }
