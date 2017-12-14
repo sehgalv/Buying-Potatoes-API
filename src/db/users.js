@@ -72,24 +72,19 @@ module.exports.getUser = function getUser(connection, USER_ID) {
  */
 module.exports.getUserLists = function getUserLists(connection, USER_ID) {
     return connection.execute(
-        `SELECT li.LIST_ID, sl.LIST_NAME, i.item_id, i.item_name, i.item_description, ic.category_name
+        `SELECT ul.LIST_ID, sl.LIST_NAME, i.item_id, i.item_name, i.item_description, ic.category_name
         FROM BP_USER_LIST ul 
         left join BP_LIST_ITEMS li on ul.list_id = li.list_id 
         left join BP_ITEM i on i.item_id = li.item_id
         left join BP_ITEM_CATEGORY ic on ic.item_id = li.item_id
-        left join BP_SHOPPING_LIST sl on sl.list_id = li.list_id
+        left join BP_SHOPPING_LIST sl on sl.list_id = ul.list_id
         WHERE ul.USER_ID=:USER_ID`, [USER_ID], {
             outFormat: oracledb.OBJECT
         }
     )
     .then(
         (res) => {
-            if(res.rows.length === 0) {
-                return Promise.reject({
-                    location: `Lists with USER_ID'${USER_ID}' do not exist.`,
-                    err: any,
-                });
-            } else {
+            
                 var tempListIDs = [];
                 for(var i in res.rows){
                     var listIDName = {
@@ -169,7 +164,6 @@ module.exports.getUserLists = function getUserLists(connection, USER_ID) {
                     status: 200,
                     data: itemsInList
                 });
-            }
         },
         (err) => {
             return Promise.reject({

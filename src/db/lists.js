@@ -19,12 +19,6 @@ module.exports.getList = function getList(connection, LIST_ID) {
     )
     .then(
         (res) => {
-            if(res.rows.length === 0) {
-                return Promise.reject({
-                    location: `LIST with id'${LIST_ID}' does not have any items.`,
-                    err: 'error',
-                });
-            } else {
                 var tempItemIds = [];
                 for (var i in res.rows) {
                     var itemIDNameDescr = {
@@ -66,7 +60,6 @@ module.exports.getList = function getList(connection, LIST_ID) {
                     status: 200,
                     data: categoriesInItem
                 });
-            }
         },
         (err) => {
             return Promise.reject({
