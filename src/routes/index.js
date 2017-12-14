@@ -28,6 +28,9 @@ exports.initRouter = connection => {
 
     const lists = require('./lists');
     lists.initRouter(connection, router);
+
+    const authentication = require('./authentication');
+    authentication.initRouter(connection, router);
     return router;
 }
 
@@ -42,7 +45,7 @@ exports.error = function error(err, res){
         err.status = 500;
     if(err.toString().includes(`ORA`))
         res.status(err.status).json(
-            `Something went wrong, see the API console if you want details, I'm not sending it to frontend`
+            `Something went wrong, check API console`
         );
     else
         res.status(err.status).json(err.err);

@@ -59,7 +59,7 @@ module.exports.getUser = function getUser(connection, USER_ID) {
         (err) => {
             return Promise.reject({
                 location: `Get user`,
-                err: any,
+                err: 'error getting user',
             })
         }
         );
@@ -271,3 +271,27 @@ WHERE USER_ID = :USER_ID
 AND LIST_ID = :LIST_ID
 */
 
+
+/**Verify User based on given email and password*/
+
+module.exports.getUserLoginVerification = function getUserLoginVerification(connection, authentication) {
+    return connection.execute(
+        `begin app_user_security.valid_user(:user_email, :user_password); end;`,
+        [authentication.user_email, authentication.user_password], {
+        })
+        .then(
+            (res) => {
+                return Promise.resolve({
+                    status: 200,
+                    data: true
+                });
+            },
+            (err) => {
+                return Promise.reject({
+                    location: `POST authentication`,
+                    err: `Unsuccessful in authenticating user with given credentials`
+                });
+            }
+        );
+
+}
